@@ -5,25 +5,37 @@ from flask import request
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
-    data = {
-        'message': 'Hello, World!'
-    }
-    return jsonify(data)
-@app.route('/api/data2', methods=['GET'])
-def get_data2():
-    data = {
-        'message': 'Hello, World!2'
-    }
-    return jsonify(data)
-@app.route('/api/post', methods=['POST'])
-def post_data():
-    request_data = request.get_json()
-    response_data = {
-        'received': request_data,
-        'message': 'Data received successfully!'
-    }
-    return jsonify(response_data)
+bulb_status = {
+    "status": "off",
+    "brightness": 0  # ค่าเริ่มต้นของความสว่าง
+}
+
+@app.route('/bulb/status', methods=['GET'])
+def get_status():
+    return jsonify(bulb_status)
+
+@app.route('/bulb/on', methods=['POST'])
+def turn_on():
+    bulb_status['status'] = 'on'
+    return jsonify({"message": "The bulb is turned on."})
+
+@app.route('/bulb/off', methods=['POST'])
+def turn_off():
+    bulb_status['status'] = 'off'
+    bulb_status['brightness'] = 0
+    return jsonify({"message": "The bulb is turned off."})
+
+@app.route('/bulb/brightness', methods=['POST'])
+def set_brightness():
+    if bulb_status['status'] == 'on':
+        brightness = request.json.get('brightness', 100)  # ค่าเริ่มต้นคือ 100
+        if 0 <= brightness <= 100:
+            bulb_status['brightness'] = brightness
+            return jsonify({"message": f"Brightness set to {brightness}."})
+        else:
+            return jsonify({"error": "Brightness should be between 0 and 100."}), 400
+    else:
+        return jsonify({"error": "Cannot set brightness. The bulb is off."}), 400
+
 if __name__ == '__main__':
     app.run(debug=True)

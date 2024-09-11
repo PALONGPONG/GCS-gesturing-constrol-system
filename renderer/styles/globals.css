@@ -28,3 +28,6 @@
 .shake {
   animation: shake 0.5s infinite;
 }
+.user-select-none {
+  user-select: none;
+}
