@@ -1,0 +1,12 @@
+appId: com.example.nextron
+productName: Control Center of Geture control
+copyright: Copyright © Kittipan
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
