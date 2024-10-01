@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
 interface ApiDetail {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -97,7 +97,7 @@ const ItemComponent = ({
     fetchApi1Data();
     const intervalId = setInterval(() => {
       fetchApi1Data();
-    }, 10000); 
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [item.props.apiDetails]);
@@ -142,7 +142,7 @@ const ItemComponent = ({
     >
       {(provided) => (
         <div
-          className="bg-white border-b-2 shadow-2xl p-4 rounded relative"
+          className="bg-white border-b-2 shadow-2xl p-8 rounded-xl relative"
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -173,24 +173,24 @@ const ItemComponent = ({
           {isDndEnabled && (
             <>
               <button
-                className="bg-yellow-500 text-white p-2 rounded mt-4"
+                className="bg-gray-200 rounded-xl   text-gray-600 p-2 mt-4 pl-5 pr-5 hover:bg-gray-300"
                 onClick={() => onEditItem(item.id)}
               >
-                แก้ไข
+                Edit
               </button>
 
               <button
-                className="bg-red-500 text-white p-2 rounded mt-4 ml-2"
+                className="bg-gray-200 rounded-xl   text-gray-600 p-2 mt-4 pl-5 pr-5 ml-2 hover:bg-gray-300"
                 onClick={() => onRemoveItem(item.id)}
               >
-                ลบ
+                Remove
               </button>
             </>
           )}
 
           <span
             {...provided.dragHandleProps}
-            className="absolute top-0 right-0 p-2 cursor-pointer"
+            className={`absolute top-0 right-0 p-2 cursor-pointer ` + (isDndEnabled ? 'block' : 'hidden')}
           >
             ⠿
           </span>
@@ -207,7 +207,7 @@ const ResponsiveGridDnd = () => {
   const [isDndEnabled, setIsDndEnabled] = useState(false);
   const [showApiForm, setShowApiForm] = useState(false);
   const [newApiDetails, setNewApiDetails] = useState<[ApiDetail, ApiDetail[]]>([
-    { method: 'GET', url: '', body: '', bearerToken: '', buttonLabel: '' }, 
+    { method: 'GET', url: '', body: '', bearerToken: '', buttonLabel: '' },
     [],
   ]);
   const [selectedComponent, setSelectedComponent] = useState<string>('Light');
@@ -269,6 +269,7 @@ const ResponsiveGridDnd = () => {
   };
 
   const handleSaveItem = () => {
+
     const fixedBody = validateAndFixJson(newApiDetails[0].body || '');
     if (!fixedBody) {
       showErrorAlert('JSON ใน body ไม่ถูกต้อง');
@@ -335,11 +336,13 @@ const ResponsiveGridDnd = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newItems));
 
     resetForm();
+    const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
+    modal.close();
     showSuccessAlert();
   };
 
   const resetForm = () => {
-    setNewApiDetails([{ method: 'GET', url: '', body: '', bearerToken: '', buttonLabel: '' }, []]); 
+    setNewApiDetails([{ method: 'GET', url: '', body: '', bearerToken: '', buttonLabel: '' }, []]);
     setSelectedComponent('Light');
     setItemName(''); // รีเซ็ตชื่อ
     setAdditionalText('');
@@ -380,14 +383,16 @@ const ResponsiveGridDnd = () => {
       setFieldToDisplay(itemToEdit.props.fieldToDisplay);
       setAdditionalText(itemToEdit.props.additionalText || '');
       setShowApiForm(true);
+      const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
+      modal.showModal();
     }
   };
 
   const componentsMap = {
     Light: ({ name, apiData }: { name: string; apiData: string }) => (
       <div>
-        <h1>Light {name}</h1>
-        <p>API Data: {apiData}</p>
+        <h1 className='font-bold flex'>Light : <p className='font-medium ml-3'>{name}</p></h1>
+        <p>Status of Light: {apiData}</p>
       </div>
     ),
     Switch: ({ name }: { name: string }) => <div>Switch {name}</div>,
@@ -397,49 +402,55 @@ const ResponsiveGridDnd = () => {
     <div className="p-4">
       <button
         onClick={toggleDnd}
-        className={`p-2 rounded mb-4 ${isDndEnabled ? 'bg-red-500' : 'bg-green-500'} text-white`}
+        className={`p-2  pl-3 pr-3 rounded-xl mb-4 ${isDndEnabled ? 'bg-white  bg-opacity-65 border-2 border-red-100' : 'bg-white bg-opacity-65 border-2 border-green-100'} text-black font-bold`}
       >
-        {isDndEnabled ? 'ปิด DND' : 'เปิด DND'}
+        {isDndEnabled ? 'Done' : 'Edit'}
       </button>
 
       {isDndEnabled ? (
-        <button
-          onClick={() => {
-            if (!showApiForm) {
-              setShowApiForm(true);
-            } else {
-              setShowApiForm(false);
-              resetForm();
-            }
-          }}
-          className="bg-green-500 text-white p-2 rounded mb-4 ml-4"
-        >
-          เพิ่มไอเท็ม
-        </button>
+        // <button
+        //   onClick={() => {
+        //     if (!showApiForm) {แ
+        //       setShowApiForm(true);
+        //     } else {
+        //       setShowApiForm(false);
+        //       resetForm();
+        //     }
+        //   }}
+        //   className="bg-green-500 text-white p-2 rounded mb-4 ml-4"
+        // >
+        //   เพิ่มไอเท็ม
+        // </button>
+        <button className="bg-white bg-opacity-65 border-2 border-green-300 p-2 rounded-xl  pl-3 pr-3 mb-4 ml-4" onClick={() => {
+          const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
+          modal.showModal();
+        }}>Add device</button>
       ) : null}
 
-      {showApiForm && (
+      {/* {showApiForm && ( */}
+      <dialog id="my_modal_2" className="modal">
+      <div className="modal-box">
         <div className="mb-4 p-4 bg-gray-100 rounded shadow-md">
-          <h2 className="text-xl mb-2">{editingItemId ? 'แก้ไขไอเท็ม' : 'ข้อมูล API ใหม่'}</h2>
+          <h2 className="text-xl mb-2">{editingItemId ? 'Edit device' : 'Add new device'}</h2>
 
           {/* ช่องสำหรับใส่ชื่อ */}
           <div className="mb-4">
-            <label className="block">ชื่อไอเท็ม:</label>
+            <label className="block">Device name :</label>
             <input
               type="text"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
-              className="p-2 border rounded w-full"
-              placeholder="กรุณาตั้งชื่อไอเท็ม"
+              className="p-2 border  w-full mt-2 rounded-lg"
+              placeholder="Your device name"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block">เลือก Component:</label>
+            <label className="block">Device Type :</label>
             <select
               value={selectedComponent}
               onChange={(e) => setSelectedComponent(e.target.value)}
-              className="p-2 border rounded"
+              className="p-2 border rounded-lg mt-2 "
             >
               <option value="Light">Light</option>
               <option value="Switch">Switch</option>
@@ -447,18 +458,18 @@ const ResponsiveGridDnd = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block">ข้อมูลเพิ่มเติม:</label>
+            <label className="block">Description:</label>
             <input
               type="text"
               value={additionalText}
               onChange={(e) => setAdditionalText(e.target.value)}
-              className="p-2 border rounded w-full"
-              placeholder="ข้อความเพิ่มเติม (ไม่จำเป็น)"
+              className="p-2 border rounded-lg mt-2 w-full"
+              placeholder="Description"
             />
           </div>
 
           <div className="mb-4">
-            <h3 className="text-lg">API ชุดที่ 1 (API หลัก)</h3>
+            <h3 className="text-lg">Status of device API</h3>
             <div className="mb-2">
               <label className="block">Method:</label>
               <select
@@ -468,7 +479,7 @@ const ResponsiveGridDnd = () => {
                   (updatedApiDetails[0] as ApiDetail).method = e.target.value as ApiDetail['method'];
                   setNewApiDetails(updatedApiDetails as [ApiDetail, ApiDetail[]]);
                 }}
-                className="p-2 border rounded"
+                className="p-2 border rounded-lg mt-2 "
               >
                 <option value="GET">GET</option>
                 <option value="POST">POST</option>
@@ -491,7 +502,7 @@ const ResponsiveGridDnd = () => {
               />
             </div>
             <div className="mb-2">
-              <label className="block">Bearer Token (ถ้ามี):</label>
+              <label className="block">Bearer Token (optional):</label>
               <input
                 type="text"
                 value={newApiDetails[0].bearerToken}
@@ -522,22 +533,22 @@ const ResponsiveGridDnd = () => {
           </div>
 
           <div className="mb-4 mt-4">
-            <label className="block">ฟิลด์ที่ต้องการแสดงผลจาก API:</label>
+            <label className="block">Field for show status :</label>
             <input
               type="text"
               value={fieldToDisplay}
               onChange={(e) => setFieldToDisplay(e.target.value)}
               className="p-2 border rounded w-full"
-              placeholder="เช่น message หรือ received.recieve"
+              placeholder="ex : message or received.recieve (for sub object)"
             />
           </div>
-
-          <h3 className="text-lg mb-2">API ชุดที่ 2 (หลาย API)</h3>
+            <div className='w-full h-1 bg-gray-500 mb-3'></div>
+          <h3 className="text-lg mb-2">Button for request API</h3>
           {Array.isArray(newApiDetails[1]) &&
             newApiDetails[1].map((apiDetail, index) => (
               <div key={index} className="mb-4">
                 <div className="mb-2">
-                  <label className="block">Method (API {index + 1}):</label>
+                  <label className="block">Method (Button {index + 1}):</label>
                   <select
                     value={apiDetail.method}
                     onChange={(e) => {
@@ -545,7 +556,7 @@ const ResponsiveGridDnd = () => {
                       updatedApiDetails[1][index].method = e.target.value as ApiDetail['method'];
                       setNewApiDetails(updatedApiDetails as [ApiDetail, ApiDetail[]]);
                     }}
-                    className="p-2 border rounded"
+                    className="p-2 border rounded-lg mt-2"
                   >
                     <option value="GET">GET</option>
                     <option value="POST">POST</option>
@@ -568,7 +579,7 @@ const ResponsiveGridDnd = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block">Bearer Token (ถ้ามี):</label>
+                  <label className="block">Bearer Token (optional) :</label>
                   <input
                     type="text"
                     value={apiDetail.bearerToken}
@@ -582,7 +593,7 @@ const ResponsiveGridDnd = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block">ชื่อปุ่ม (Button Label):</label>
+                  <label className="block">Button Label :</label>
                   <input
                     type="text"
                     value={apiDetail.buttonLabel}
@@ -596,7 +607,7 @@ const ResponsiveGridDnd = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block">เลือกสีปุ่ม:</label>
+                  <label className="block">Color of button :</label>
                   <input
                     type="color"
                     value={apiDetail.buttonColor}
@@ -625,37 +636,46 @@ const ResponsiveGridDnd = () => {
                 )}
 
                 <button
-                  className="bg-red-500 text-white p-2 rounded mt-2"
+                  className="bg-gray-200 text-gray-600 p-2 rounded-xl hover:bg-gray-300"
                   onClick={() => handleRemoveApi2(index)}
                 >
-                  ลบ API 2 ({index + 1})
+                  Remove button - {index + 1}
                 </button>
+                <div className='w-full h-1 bg-gray-500 mb-3 mt-3'></div>
               </div>
-            ))}
+              
+            )
+            )}
 
           <button
-            className="bg-blue-500 text-white p-2 rounded"
+            className="bg-gray-200 text-gray-600 p-2 rounded-xl hover:bg-gray-300"
             onClick={handleAddApi2}
           >
-            เพิ่ม API 2
+            Add new button
           </button>
 
           <div className="flex justify-end">
             <button
               onClick={handleSaveItem}
-              className="bg-blue-500 text-white p-2 rounded mt-2"
+              className="bg-blue-500 text-white p-2 rounded-xl mt-2 hover:bg-blue-600"
             >
-              {editingItemId ? 'บันทึกการแก้ไข' : 'เพิ่มไอเท็มใหม่'}
+              {editingItemId ? 'Done' : 'Add device'}
             </button>
           </div>
         </div>
-      )}
+        </div>
+
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={resetForm}>close</button>
+        </form>
+      </dialog>
+      {/* )} */}
 
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="droppable-grid" direction="vertical">
           {(provided) => (
             <div
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 user-select-none"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 user-select-none "
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
