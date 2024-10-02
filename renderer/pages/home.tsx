@@ -153,7 +153,7 @@ const ItemComponent = ({
             })
             : <div>Component not found</div>}
 
-          {loading && <div>Loading...</div>}
+          {loading }
           {error && <div className="text-red-500">{error}</div>}
 
           {Array.isArray(item.props.apiDetails[1]) &&
