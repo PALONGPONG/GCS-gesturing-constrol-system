@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faBars, faCog} from '@fortawesome/free-solid-svg-icons';
 import router from "next/router";
 const Sidebar = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Home", src: faHouse, path: "/home" },
     

@@ -1,3 +1,5 @@
+import { faLightbulb, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Swal from 'sweetalert2';
@@ -342,6 +344,8 @@ const ResponsiveGridDnd = () => {
   };
 
   const resetForm = () => {
+    const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
+    modal.close();
     setNewApiDetails([{ method: 'GET', url: '', body: '', bearerToken: '', buttonLabel: '' }, []]);
     setSelectedComponent('Light');
     setItemName(''); // รีเซ็ตชื่อ
@@ -390,12 +394,33 @@ const ResponsiveGridDnd = () => {
 
   const componentsMap = {
     Light: ({ name, apiData }: { name: string; apiData: string }) => (
-      <div>
+      <div className='flex '>
+
+<div className='items-center justify-center content-center mr-5'>
+
+        <FontAwesomeIcon icon={faLightbulb} size='2xl'/>
+</div>
+        <div>
         <h1 className='font-bold flex'>Light : <p className='font-medium ml-3'>{name}</p></h1>
         <p>Status of Light: {apiData}</p>
+        </div>
+  
       </div>
     ),
-    Switch: ({ name }: { name: string }) => <div>Switch {name}</div>,
+    Switch: ({ name, apiData }: { name: string; apiData: string }) => (
+      <div className='flex '>
+
+      <div className='items-center justify-center content-center mr-5'>
+      
+              <FontAwesomeIcon icon={faToggleOff} size='2xl'/>
+      </div>
+              <div>
+              <h1 className='font-bold flex'>Switch : <p className='font-medium ml-3'>{name}</p></h1>
+              <p>Status of Light: {apiData}</p>
+              </div>
+        
+            </div>
+    ),
   };
 
   return (
