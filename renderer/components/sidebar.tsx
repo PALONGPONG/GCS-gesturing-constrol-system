@@ -10,6 +10,8 @@ const Sidebar = () => {
     { title: "Home", src: faHouse, path: "/home" },
     
     { title: "Setting", src: faCog, gap: true,path: "/settings" },
+    { title: "test", src: faCog, gap: true,path: "/test" },
+
   ];
 
   return (
