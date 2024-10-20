@@ -1,8 +1,12 @@
-import { faLightbulb, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+import { faLightbulb, faPenToSquare, faPlus, faToggleOff, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import React, { useState, useEffect, use } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Swal from 'sweetalert2';
+// React
+import { motion } from "framer-motion"
 
 interface ApiDetail {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -57,6 +61,7 @@ const ItemComponent = ({
   isDndEnabled,
   onEditItem,
   onRemoveItem,
+  lastestMessage,
 }: {
   item: DndItem;
   index: number;
@@ -64,6 +69,7 @@ const ItemComponent = ({
   isDndEnabled: boolean;
   onEditItem: (itemId: string) => void;
   onRemoveItem: (itemId: string) => void;
+  lastestMessage: string;
 }) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -71,7 +77,12 @@ const ItemComponent = ({
   const [api2Data, setApi2Data] = useState<any[]>([]);
   const [api2Loading, setApi2Loading] = useState<number | null>(null);
   const [api2Error, setApi2Error] = useState<string | null>(null);
-
+  const [lastemessage , setLastestMessage] = useState<string>("");
+  AOS.init();
+  useEffect(() => {
+    setLastestMessage(lastestMessage);
+  }, [lastestMessage]);
+  console.log("sdasdasd",lastestMessage);
   const fetchApi1Data = async () => {
     const [api1] = item.props.apiDetails;
     setLoading(true);
@@ -85,7 +96,7 @@ const ItemComponent = ({
           ...(api1.bearerToken && { Authorization: `Bearer ${api1.bearerToken}` }),
         },
       });
-      if (!response.ok) throw new Error('Error fetching API 1');
+      if (!response.ok) throw new Error('');
       const apiData = await response.json();
       setData(apiData);
     } catch (error: any) {
@@ -94,15 +105,18 @@ const ItemComponent = ({
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchApi1Data();
-    const intervalId = setInterval(() => {
-      fetchApi1Data();
-    }, 10000);
+    setLastestMessage("null")
+  }, [lastemessage]);
+  // useEffect(() => {
+  //   fetchApi1Data();
+  //   const intervalId = setInterval(() => {
+  //     fetchApi1Data();
+  //   }, 10000);
 
-    return () => clearInterval(intervalId);
-  }, [item.props.apiDetails]);
+  //   return () => clearInterval(intervalId);
+  // }, [item.props.apiDetails]);
 
   const handleApi2Request = async (apiIndex: number) => {
     const [, api2Array] = item.props.apiDetails;
@@ -134,7 +148,7 @@ const ItemComponent = ({
       setApi2Loading(null);
     }
   };
-
+  
   return (
     <Draggable
       key={item.id}
@@ -147,6 +161,14 @@ const ItemComponent = ({
           className="bg-white border-b-2 shadow-2xl p-8 rounded-xl relative"
           ref={provided.innerRef}
           {...provided.draggableProps}
+          data-aos="fade-up"
+          data-aos-offset="200"
+          data-aos-delay="50"
+          data-aos-duration="1000"
+          data-aos-easing="ease-in-out"
+          data-aos-mirror="true"
+          data-aos-once="false"
+          data-aos-anchor-placement="top-center"
         >
           {componentsMap[item.content]
             ? React.createElement(componentsMap[item.content], {
@@ -175,16 +197,18 @@ const ItemComponent = ({
           {isDndEnabled && (
             <>
               <button
-                className="bg-gray-200 rounded-xl   text-gray-600 p-2 mt-4 pl-5 pr-5 hover:bg-gray-300"
+                className="bg-gray-100 rounded-xl border-2  text-gray-600 p-2 mt-4 pl-5 pr-5 hover:bg-gray-300"
                 onClick={() => onEditItem(item.id)}
               >
+                <FontAwesomeIcon icon={faPenToSquare} className='mr-2'/>
                 Edit
               </button>
 
               <button
-                className="bg-gray-200 rounded-xl   text-gray-600 p-2 mt-4 pl-5 pr-5 ml-2 hover:bg-gray-300"
+                className="bg-gray-100 rounded-xl border-2  text-gray-600 p-2 mt-4 pl-5 pr-5 ml-2 hover:bg-gray-300"
                 onClick={() => onRemoveItem(item.id)}
               >
+                <FontAwesomeIcon icon={faTrash} className='mr-2'/>
                 Remove
               </button>
             </>
@@ -204,7 +228,12 @@ const ItemComponent = ({
 
 const LOCAL_STORAGE_KEY = "dnd-items";
 
-const ResponsiveGridDnd = () => {
+interface ResponsiveGridDndProps {
+  latestMessage: string;
+  isConnected: boolean;
+}
+
+const ResponsiveGridDnd: React.FC<ResponsiveGridDndProps> = ({ latestMessage,isConnected }) => {
   const [items, setItems] = useState<DndItem[]>([]);
   const [isDndEnabled, setIsDndEnabled] = useState(false);
   const [showApiForm, setShowApiForm] = useState(false);
@@ -425,41 +454,57 @@ const ResponsiveGridDnd = () => {
 
   return (
     <div className="p-4">
+      <div className='flex'>
       <button
         onClick={toggleDnd}
-        className={`p-2  pl-3 pr-3 rounded-xl mb-4 ${isDndEnabled ? 'bg-white  bg-opacity-65 border-2 border-red-100' : 'bg-white bg-opacity-65 border-2 border-green-100'} text-black font-bold`}
+        className={`flex p-2  pl-3 pr-3 rounded-xl mb-4 hover:bg-gray-400 items-center w-30 h-12 ${isDndEnabled ? 'bg-white  bg-opacity-65  border-red-100' : 'bg-white bg-opacity-65  border-green-100'} text-black font-bold`}
       >
-        {isDndEnabled ? 'Done' : 'Edit'}
-      </button>
+        <FontAwesomeIcon icon={faPenToSquare} className='mr-2'/>
+        <p className='mt-1'>
 
+        {isDndEnabled ? 'Done' : 'Edit'}
+        </p>
+      </button>
+      {/* {isConnected ? (
+      <div className='pl-2'>Connected</div>)
+      : (
+        <div className='pl-2'>Not Connected</div>
+      )} */}
       {isDndEnabled ? (
         // <button
         //   onClick={() => {
-        //     if (!showApiForm) {แ
-        //       setShowApiForm(true);
-        //     } else {
-        //       setShowApiForm(false);
-        //       resetForm();
-        //     }
-        //   }}
-        //   className="bg-green-500 text-white p-2 rounded mb-4 ml-4"
-        // >
-        //   เพิ่มไอเท็ม
-        // </button>
-        <button className="bg-white bg-opacity-65 border-2 border-green-300 p-2 rounded-xl  pl-3 pr-3 mb-4 ml-4" onClick={() => {
-          const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
-          modal.showModal();
-        }}>Add device</button>
-      ) : null}
-
+          //     if (!showApiForm) {แ
+            //       setShowApiForm(true);
+            //     } else {
+              //       setShowApiForm(false);
+              //       resetForm();
+              //     }
+              //   }}
+              //   className="bg-green-500 text-white p-2 rounded mb-4 ml-4"
+              // >
+              //   เพิ่มไอเท็ม
+              // </button>
+              <button className="flex bg-white bg-opacity-65 items-center p-2 rounded-xl  pl-3 pr-3 mb-4 ml-2 h-12 hover:bg-gray-400 font-semibold" onClick={() => {
+                const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
+                modal.showModal();
+              }}>
+                <FontAwesomeIcon icon={faPlus} className='mr-2'/>
+                
+                <p className='mt-1'>
+                Add device
+                  </p></button>
+            ) : null}
+</div>
       {/* {showApiForm && ( */}
       <dialog id="my_modal_2" className="modal">
       <div className="modal-box">
-        <div className="mb-4 p-4 bg-gray-100 rounded shadow-md">
+        <div className="mb-4 p-4 bg-gray-100 rounded shadow-md"
+        
+        >
           <h2 className="text-xl mb-2">{editingItemId ? 'Edit device' : 'Add new device'}</h2>
 
           {/* ช่องสำหรับใส่ชื่อ */}
-          <div className="mb-4">
+          <div className="mb-4" >
             <label className="block">Device name :</label>
             <input
               type="text"
@@ -470,7 +515,7 @@ const ResponsiveGridDnd = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4" >
             <label className="block">Device Type :</label>
             <select
               value={selectedComponent}
@@ -713,6 +758,7 @@ const ResponsiveGridDnd = () => {
                   isDndEnabled={isDndEnabled}
                   onEditItem={handleEditItem}
                   onRemoveItem={handleRemoveItem}
+                  lastestMessage={latestMessage}
                 />
               ))}
               {provided.placeholder}
@@ -725,3 +771,5 @@ const ResponsiveGridDnd = () => {
 };
 
 export default ResponsiveGridDnd;
+
+

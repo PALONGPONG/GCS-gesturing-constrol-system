@@ -2,22 +2,22 @@
 import { useState } from "react";
 import Link from 'next/link';  // Import Link from Next.js
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faBars, faCog} from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faBars, faCog, faHands} from '@fortawesome/free-solid-svg-icons';
 import router from "next/router";
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Home", src: faHouse, path: "/home" },
     
-    { title: "Setting", src: faCog, gap: true,path: "/settings" },
-    { title: "test", src: faCog, gap: true,path: "/test" },
+    { title: "Setting", src: faHands, gap: true,path: "/getsure" },
+    { title: "test", src: faCog, gap: true,path: "/setting" },
 
   ];
 
   return (
     <div className="flex">
       <div
-  className={` ${open ? "w-72" : "w-20 "} bg-white border-b  h-screen p-5 pt-8 relative duration-300 backdrop-blur-md `}
+  className={` ${open ? "w-72" : "w-20 "} bg-white border-r-2 shadow-xl h-screen p-5 pt-8 relative duration-300 backdrop-blur-md `}
 >
         {/* <img
           src="/assets/control.png"

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 interface ApiDetail {
   method: string;
@@ -33,7 +35,9 @@ interface ApiSelection {
 const ApiSelectionPage = () => {
   const [apiGroups, setApiGroups] = useState<ApiGroup[]>([]);
   const [selection, setSelection] = useState<ApiSelection>({});
-
+  const pathimg = ["/hello.png","/post.png","/hello.png","/hello.png","/hello.png"]
+  const getsure = ["โบกมือ", "ชูนิ้ว",   "กำมือ",   "กำมือ",   "กำมือ"]
+  AOS.init();
   // ดึงข้อมูลจาก localStorage เมื่อคอมโพเนนต์โหลด
   useEffect(() => {
     const storedApiGroups = localStorage.getItem('dnd-items');
@@ -65,6 +69,7 @@ const ApiSelectionPage = () => {
               groupId,
               apiIndex: apiIdx,
               apiDetail: api,
+              
             },
           };
 
@@ -79,12 +84,25 @@ const ApiSelectionPage = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-lg font-bold mb-4">จับคู่ API กับเลข</h1>
-      <div className="space-y-4">
+      <div className=''>
+
+      
+      <h1 className="text-lg font-bold mb-4">เลือก API ที่สำหรับท่าทาง</h1>
+      <div className="space-y-4" 
+          data-aos="fade-left"
+          data-aos-offset="200"
+          data-aos-delay="50"
+          data-aos-duration="1000"
+          data-aos-easing="ease-in-out"
+          data-aos-mirror="true"
+          data-aos-once="false"
+          data-aos-anchor-placement="top-center">
         {[1, 2, 3, 4, 5].map((num) => (
-          <div key={num}>
+          <div key={num} className='bg-white p-8 rounded-xl shadow-xl border-b-2 flex '>
+            <img src={pathimg[num-1]} alt="" className='w-20 mr-11'/>
+            <div className='w-full'>
             <label className="block mb-2 font-medium">
-              เลือก API สำหรับเลข {num}
+              เลือก API สำหรับท่าทาง {getsure[num-1]}
             </label>
             <select
               value={selection[num] ? `${selection[num].groupId}:${selection[num].apiIndex}` : ''}
@@ -92,7 +110,7 @@ const ApiSelectionPage = () => {
                 const [groupId, apiIndex] = e.target.value.split(':');
                 handleSelectChange(num, groupId, apiIndex);
               }}
-              className="border border-gray-300 p-2 rounded w-full"
+              className="border border-gray-300 p-2 rounded-xl w-full "
             >
               <option value="">-- เลือก API --</option>
               {apiGroups.map((group) =>
@@ -105,14 +123,17 @@ const ApiSelectionPage = () => {
                         key={`${group.id}-${apiIndex + 1}`}
                         value={`${group.id}:${apiIndex + 1}`}
                       >
-                        {`${group.props.name} - ${api.method} - ${api.url}`}
+                        {`${group.props.name} - ${api.buttonLabel}`}
                       </option>
                     ) : null
                   )
               )}
             </select>
+            </div>
           </div>
         ))}
+      </div>
+      
       </div>
     </div>
   );
