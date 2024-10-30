@@ -1,5 +1,15 @@
 import axios from 'axios';
 
+// ฟังก์ชันตรวจสอบและแปลง JSON
+const parseJsonSafely = (data: any) => {
+  try {
+    return typeof data === 'string' ? JSON.parse(data) : data;
+  } catch (error) {
+    console.warn('ข้อมูลไม่เป็น JSON ที่ถูกต้อง:', data);
+    return {}; // คืนค่าเป็นอ็อบเจ็กต์ว่างถ้าไม่ใช่ JSON ที่ถูกต้อง
+  }
+};
+
 // ฟังก์ชันที่จะทำการดึง API จาก localStorage และส่ง request ตามตัวเลขที่รับเข้ามา
 export const handleApiRequest = async (num: number) => {
   try {
@@ -24,6 +34,9 @@ export const handleApiRequest = async (num: number) => {
 
     const { method, url, body, bearerToken } = selectedApi.apiDetail;
 
+    // ใช้ parseJsonSafely กับ body
+    const data = parseJsonSafely(body);
+
     // สร้างการตั้งค่า request สำหรับ axios
     const config = {
       method: method,
@@ -32,7 +45,7 @@ export const handleApiRequest = async (num: number) => {
         'Content-Type': 'application/json',
         ...(bearerToken && { Authorization: `Bearer ${bearerToken}` }),
       },
-      data: body ? JSON.parse(body) : undefined,
+      data: data,
     };
 
     // ส่ง request ไปยัง API
@@ -40,6 +53,8 @@ export const handleApiRequest = async (num: number) => {
     console.log(`ผลลัพธ์จาก API สำหรับตัวเลข ${num}:`, response.data);
     return response.data;
   } catch (error) {
-    console.error('เกิดข้อผิดพลาดในการส่ง request:', error);
+    
+      // console.error('เกิดข้อผิดพลาดในการส่ง request:', error.response.data);
+    
   }
 };

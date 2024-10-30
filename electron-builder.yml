@@ -1,5 +1,5 @@
 appId: com.example.nextron
-productName: Control Center of Geture control
+productName: GCS - Getsure Control System
 copyright: Copyright © Kittipan
 directories:
   output: dist

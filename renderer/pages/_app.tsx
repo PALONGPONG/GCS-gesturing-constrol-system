@@ -9,7 +9,7 @@ const ibmPlexSansThai = IBM_Plex_Sans_Thai({
 });
 import Sidebar from '../components/sidebar'
 // import '../fontawesome';
-import WebSocketClient from '../service/websocketClient';
+
 import { handleApiRequest } from '../service/recieve_get_and_do';
 function MyApp({ Component, pageProps }: AppProps) {
   const [latestMessage, setLatestMessage] = useState<string | null>(null)
@@ -54,6 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (latestMessage) {
       handleApiRequest(parseInt(latestMessage));
+      setLatestMessage(null);
     }
   }
     , [latestMessage]);

@@ -161,14 +161,14 @@ const ItemComponent = ({
           className="bg-white border-b-2 shadow-2xl p-8 rounded-xl relative"
           ref={provided.innerRef}
           {...provided.draggableProps}
-          data-aos="fade-up"
-          data-aos-offset="200"
-          data-aos-delay="50"
-          data-aos-duration="1000"
-          data-aos-easing="ease-in-out"
-          data-aos-mirror="true"
-          data-aos-once="false"
-          data-aos-anchor-placement="top-center"
+          // data-aos="fade-up"
+          // data-aos-offset="200"
+          // data-aos-delay="50"
+          // data-aos-duration="1000"
+          // data-aos-easing="ease-in-out"
+          // data-aos-mirror="true"
+          // data-aos-once="false"
+          // data-aos-anchor-placement="top-center"
         >
           {componentsMap[item.content]
             ? React.createElement(componentsMap[item.content], {

@@ -32,12 +32,12 @@ interface ApiSelection {
   [key: number]: SelectedApi;
 }
 
-const ApiSelectionPage = () => {
+const getsure = () => {
   const [apiGroups, setApiGroups] = useState<ApiGroup[]>([]);
   const [selection, setSelection] = useState<ApiSelection>({});
-  const pathimg = ["/hello.png","/post.png","/hello.png","/hello.png","/hello.png"]
-  const getsure = ["โบกมือ", "ชูนิ้ว",   "กำมือ",   "กำมือ",   "กำมือ"]
-  AOS.init();
+  const pathimg = ["/hello.png","/gummue.webp","/jeepup.png","/jeepdown.png"]
+  const getsure = ["โบกมือ", "กำมือ",   "จีบนิ้วขยับขึ้น",   "จีบนิ้วขยับลง"]
+  // AOS.init();
   // ดึงข้อมูลจาก localStorage เมื่อคอมโพเนนต์โหลด
   useEffect(() => {
     const storedApiGroups = localStorage.getItem('dnd-items');
@@ -89,15 +89,16 @@ const ApiSelectionPage = () => {
       
       <h1 className="text-lg font-bold mb-4">เลือก API ที่สำหรับท่าทาง</h1>
       <div className="space-y-4" 
-          data-aos="fade-left"
-          data-aos-offset="200"
-          data-aos-delay="50"
-          data-aos-duration="1000"
-          data-aos-easing="ease-in-out"
-          data-aos-mirror="true"
-          data-aos-once="false"
-          data-aos-anchor-placement="top-center">
-        {[1, 2, 3, 4, 5].map((num) => (
+          // data-aos="fade-left"
+          // data-aos-offset="200"
+          // data-aos-delay="50"
+          // data-aos-duration="1000"
+          // data-aos-easing="ease-in-out"
+          // data-aos-mirror="true"
+          // data-aos-once="false"
+          // data-aos-anchor-placement="top-center"
+          >
+        {[1, 2, 3, 4].map((num) => (
           <div key={num} className='bg-white p-8 rounded-xl shadow-xl border-b-2 flex '>
             <img src={pathimg[num-1]} alt="" className='w-20 mr-11'/>
             <div className='w-full'>
@@ -139,4 +140,4 @@ const ApiSelectionPage = () => {
   );
 };
 
-export default ApiSelectionPage;
+export default getsure;

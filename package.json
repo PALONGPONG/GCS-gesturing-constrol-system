@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
+  "name": "gcs-gesture-control-system",
   "description": "My application description",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Kittipan NgaoNgam",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/axios": "^0.9.36",
     "@types/electron": "^1.4.38",
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.17.3",
     "@types/react": "^18.2.52",
     "@types/react-fontawesome": "^1.6.8",
     "autoprefixer": "^10.4.19",
@@ -43,6 +43,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^3.4.10",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.3"
   }
 }
