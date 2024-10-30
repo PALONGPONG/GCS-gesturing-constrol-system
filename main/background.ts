@@ -66,11 +66,11 @@ pythonProcess.on('close', (code) => {
 
   // รันสคริปต์ Python
   startPythonScript();
-  // startcamera();
+  startcamera();
   const mainWindow = createWindow('main', {
     // fullscreen: true,  // เปิดแอปในโหมด fullscreen
-    width: 1000,
-    height: 600,
+    width: 1920,
+    height: 1080,
     // frame: false,  // ปิดแถบเครื่องมือ
     title: 'GCS - Getsure Control System',  // ตั้งชื่อแอปใหม่ที่นี่
     webPreferences: {
@@ -90,7 +90,7 @@ pythonProcess.on('close', (code) => {
 app.on('window-all-closed', () => {
   if (pythonProcess) {
     pythonProcess.kill('SIGTERM'); // เปลี่ยนเป็น SIGTERM เพื่อให้มั่นใจว่าโปรเซสจะหยุดทำงาน
-
+    pythonProcess.kill('SIGTERM');
   }
   app.quit();
 });

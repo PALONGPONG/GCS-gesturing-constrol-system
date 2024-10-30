@@ -9,8 +9,8 @@ const Sidebar = () => {
   const Menus = [
     { title: "Home", src: faHouse, path: "/home" },
     
-    { title: "Setting", src: faHands, gap: true,path: "/getsure" },
-    { title: "test", src: faCog, gap: true,path: "/setting" },
+    { title: "Getsure", src: faHands, gap: true,path: "/getsure" },
+    // { title: "test", src: faCog, gap: true,path: "/setting" },
 
   ];
 
