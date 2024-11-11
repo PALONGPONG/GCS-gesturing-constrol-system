@@ -60,18 +60,18 @@ pythonProcess.on('close', (code) => {
   console.log(`Python process exited with code ${code}`);
 });
 }
-
+let mainWindow
 ; (async () => {
   await app.whenReady();
 
   // รันสคริปต์ Python
   startPythonScript();
   startcamera();
-  const mainWindow = createWindow('main', {
+   mainWindow = createWindow('main', {
     // fullscreen: true,  // เปิดแอปในโหมด fullscreen
     width: 1920,
     height: 1080,
-    // frame: false,  // ปิดแถบเครื่องมือ
+    frame: false,  // ปิดแถบเครื่องมือ
     title: 'GCS - Getsure Control System',  // ตั้งชื่อแอปใหม่ที่นี่
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -95,7 +95,18 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-
+ipcMain.on('close-app', () => {
+  if (pythonProcess) {
+    pythonProcess.kill('SIGTERM'); // เปลี่ยนเป็น SIGTERM เพื่อให้มั่นใจว่าโปรเซสจะหยุดทำงาน
+    pythonProcess.kill('SIGTERM');
+  }
+  app.quit();
+});
+ipcMain.on('open-devtools', () => {
+  if (mainWindow) {
+    mainWindow.webContents.openDevTools(); // เปิด DevTools
+  }
+});
 ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`);
 });

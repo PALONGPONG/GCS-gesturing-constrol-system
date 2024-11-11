@@ -20,7 +20,17 @@ module.exports = {
       purple: colors.purple,
       pink: colors.pink,
     },
-    extend: {},
+
+    extend: {
+      textStrokeWidth: {
+        '1': '1px',
+        '2': '2px',
+      },
+      textStrokeColor: {
+        white: '#ffffff',
+        black: '#000000',
+      },
+    },
   },
   plugins: [require('daisyui')],
 }

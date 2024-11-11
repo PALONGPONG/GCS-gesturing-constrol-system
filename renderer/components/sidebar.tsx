@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from 'next/link';  // Import Link from Next.js
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faBars, faCog, faHands} from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faBars, faCog, faHands, faClose, faSquareXmark} from '@fortawesome/free-solid-svg-icons';
 import router from "next/router";
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -10,6 +10,8 @@ const Sidebar = () => {
     { title: "Home", src: faHouse, path: "/home" },
     
     { title: "Getsure", src: faHands, gap: true,path: "/getsure" },
+    { title: "Close Application", src: faSquareXmark, gap: true,path: "/quite" },
+
     // { title: "test", src: faCog, gap: true,path: "/setting" },
 
   ];

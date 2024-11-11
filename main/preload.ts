@@ -13,6 +13,13 @@ const handler = {
       ipcRenderer.removeListener(channel, subscription)
     }
   },
+  // เพิ่มเมธอด closeApp สำหรับปิดโปรแกรม
+  closeApp() {
+    ipcRenderer.send('close-app') // ส่ง event ไปยัง main process
+  },
+  openDevtools() {
+    ipcRenderer.send('open-devtools')
+  },
 }
 
 contextBridge.exposeInMainWorld('ipc', handler)
