@@ -12,4 +12,5 @@ files:
 extraResources:
   - from: ./API
     to: ./API
+
 publish: null

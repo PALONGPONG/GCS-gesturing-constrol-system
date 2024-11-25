@@ -1,11 +1,9 @@
-
-
 import path from 'path';
 import { app, ipcMain } from 'electron';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import { spawn } from 'child_process';
+
 const isProd = process.env.NODE_ENV === 'production';
 
 if (isProd) {
@@ -14,65 +12,92 @@ if (isProd) {
   app.setPath('userData', `${app.getPath('userData')} (development)`);
 }
 
-let pythonProcess;
+let exeProcess;
 
-async function startPythonScript() {
-  // ระบุตำแหน่งของไฟล์ test_socket.py โดยใช้ app.getAppPath() ใน production
-  const scriptPath = isProd
-  ? path.join(process.resourcesPath, 'API', 'test_socket.py')  // ใช้ resourcesPath สำหรับ production
-  : path.join(__dirname, '../API/test_socket.py');  // สำหรับ development
+async function startExeScript() {
+  // ระบุตำแหน่งไฟล์ .exe
+  const exePath = isProd
+    ? path.join(process.resourcesPath, 'API', 'websocketconnect.exe') // Production
+    : path.join(__dirname, '../API/websocketconnect.exe'); // Development
 
-console.log(`Script Path: ${scriptPath}`);  // ลองตรวจสอบว่า path ถูกต้องหรือไม่
+  console.log(`Executable Path: ${exePath}`); // ตรวจสอบ path
 
-pythonProcess = spawn('python', [scriptPath]);
+  exeProcess = spawn(exePath);
 
-pythonProcess.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
+  exeProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 
-pythonProcess.stderr.on('data', (data) => {
-  console.error(`stderr: ${data}`);
-});
+  exeProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
 
-pythonProcess.on('close', (code) => {
-  console.log(`Python process exited with code ${code}`);
-});
+  exeProcess.on('close', (code) => {
+    console.log(`Executable process exited with code ${code}`);
+  });
 }
-async function startcamera() {
-  // ระบุตำแหน่งของไฟล์ test_socket.py โดยใช้ app.getAppPath() ใน production
-  const scriptPath = isProd
-  ? path.join(process.resourcesPath, 'API', 'camera.py')  // ใช้ resourcesPath สำหรับ production
-  : path.join(__dirname, '../API/camera.py');  // สำหรับ development
 
-console.log(`Script Path: ${scriptPath}`);  // ลองตรวจสอบว่า path ถูกต้องหรือไม่
+async function startExesocketScript() {
+  // ระบุตำแหน่งไฟล์ .exe
+  const exePath = isProd
+    ? path.join(process.resourcesPath, 'API', 'socketapi.exe') // Production
+    : path.join(__dirname, '../API/socketapi.exe'); // Development
 
-pythonProcess = spawn('python', [scriptPath]);
+  console.log(`Executable Path: ${exePath}`); // ตรวจสอบ path
 
-pythonProcess.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
+  exeProcess = spawn(exePath);
 
-pythonProcess.stderr.on('data', (data) => {
-  console.error(`stderr: ${data}`);
-});
+  exeProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 
-pythonProcess.on('close', (code) => {
-  console.log(`Python process exited with code ${code}`);
-});
+  exeProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  exeProcess.on('close', (code) => {
+    console.log(`Executable process exited with code ${code}`);
+  });
 }
-let mainWindow
-; (async () => {
+
+async function startExeAIScript() {
+  // ระบุตำแหน่งไฟล์ .exe
+  const exePath = isProd
+    ? path.join(process.resourcesPath, 'API', 'AI.exe') // Production
+    : path.join(__dirname, '../API/AI.exe'); // Development
+
+  console.log(`Executable Path: ${exePath}`); // ตรวจสอบ path
+
+  exeProcess = spawn(exePath);
+
+  exeProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  exeProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  exeProcess.on('close', (code) => {
+    console.log(`Executable process exited with code ${code}`);
+  });
+}
+
+
+let mainWindow;
+(async () => {
   await app.whenReady();
 
-  // รันสคริปต์ Python
-  startPythonScript();
-  startcamera();
-   mainWindow = createWindow('main', {
-    // fullscreen: true,  // เปิดแอปในโหมด fullscreen
+  // เรียกใช้งาน .exe แทน Python script
+  startExeScript();
+  // startExeAIScript();
+  startExesocketScript();
+
+  mainWindow = createWindow('main', {
     width: 1920,
     height: 1080,
-    frame: false,  // ปิดแถบเครื่องมือ
-    title: 'GCS - Getsure Control System',  // ตั้งชื่อแอปใหม่ที่นี่
+    frame: false,
+    title: 'GCS - Getsure Control System',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -88,25 +113,25 @@ let mainWindow
 })();
 
 app.on('window-all-closed', () => {
-  if (pythonProcess) {
-    pythonProcess.kill('SIGTERM'); // เปลี่ยนเป็น SIGTERM เพื่อให้มั่นใจว่าโปรเซสจะหยุดทำงาน
-    pythonProcess.kill('SIGTERM');
+  if (exeProcess) {
+    exeProcess.kill('SIGTERM'); // หยุดการทำงานของ .exe
   }
   app.quit();
 });
 
 ipcMain.on('close-app', () => {
-  if (pythonProcess) {
-    pythonProcess.kill('SIGTERM'); // เปลี่ยนเป็น SIGTERM เพื่อให้มั่นใจว่าโปรเซสจะหยุดทำงาน
-    pythonProcess.kill('SIGTERM');
+  if (exeProcess) {
+    exeProcess.kill('SIGTERM'); // หยุดการทำงานของ .exe
   }
   app.quit();
 });
+
 ipcMain.on('open-devtools', () => {
   if (mainWindow) {
-    mainWindow.webContents.openDevTools(); // เปิด DevTools
+    mainWindow.webContents.openDevTools();
   }
 });
+
 ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`);
 });
