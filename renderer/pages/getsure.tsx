@@ -35,8 +35,8 @@ interface ApiSelection {
 const getsure = () => {
   const [apiGroups, setApiGroups] = useState<ApiGroup[]>([]);
   const [selection, setSelection] = useState<ApiSelection>({});
-  const pathimg = ["/hello.png","/gummue.webp","/jeepup.png","/jeepdown.png"]
-  const getsure = ["โบกมือ", "กำมือ",   "จีบนิ้วขยับขึ้น",   "จีบนิ้วขยับลง"]
+  const pathimg = ["/trim.2D884DE1-DD96-4E18-8314-A8BB9AF9C400.gif","/trim.B86A99FD-C2EC-444E-ADF5-2FDE229E196F.gif","/trim.D00ED959-B62B-4CAD-BB06-01DAEFABE0D8.gif","/trim.A2B6EDAA-F783-48CC-BAFD-6548A3734280.gif"]
+  const getsure = ["โบกมือ", "งอนิ้วมือเล็กน้อย 2 ครั้ง",   "ชู 2 นิ้วแล้วกำมือ",   "แบมือแล้วกำมือค้างไว้ 2 วินาที"]
   // AOS.init();
   // ดึงข้อมูลจาก localStorage เมื่อคอมโพเนนต์โหลด
   useEffect(() => {
@@ -100,7 +100,7 @@ const getsure = () => {
           >
         {[1, 2, 3, 4].map((num) => (
           <div key={num} className='bg-white p-8 rounded-xl shadow-xl border-b-2 flex '>
-            <img src={pathimg[num-1]} alt="" className='w-20 mr-11'/>
+            <img src={pathimg[num-1]} alt="" className='w-32 mr-11  rounded-lg'/>
             <div className='w-full'>
             <label className="block mb-2 font-medium">
               เลือก API สำหรับท่าทาง {getsure[num-1]}
